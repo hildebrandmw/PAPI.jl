@@ -27,7 +27,14 @@
       ECOMBO =  -24,    # Bad combination of  features
 )
 
-const errmsg = let msgs = Dict{RetCode,ASCIIString}(
+@enum(InitCode,
+      NOT_INITED = 0,       # Library has not been initialized
+      LOW_LEVEL_INITED = 1, # Low level has called library init
+      HIGH_LEVEL_INITED = 2,# High level has called library init
+      THREAD_LEVEL_INITED = 4, # Threads have been inited
+ )
+
+const errmsg = let msgs = Dict{RetCode,String}(
         OK => "OK",
         EINVAL => "Invalid argument",
         ENOMEM => "Insufficient memory",

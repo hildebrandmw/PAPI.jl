@@ -1,5 +1,4 @@
 using PAPI
-using FactCheck
 
 const JULIAEXE = joinpath(JULIA_HOME, Base.julia_exename())
 

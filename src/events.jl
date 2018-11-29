@@ -1,5 +1,5 @@
-@enum(Event,
-    L1_DCM = 0x80000000,  # Level 1 data cache misses
+@enum(Event::Int32,
+    L1_DCM = signed(0x80000000),  # Level 1 data cache misses
     L1_ICM,  # Level 1 instruction cache misses
     L2_DCM,  # Level 2 data cache misses
     L2_ICM,  # Level 2 instruction cache misses

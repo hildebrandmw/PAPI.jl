@@ -40,8 +40,8 @@
         @test LowLevel.running(state) == false
 
         # Make the the "TOT_INS" instruction exists and add it to the eventset
-        @test LowLevel.query_event(PAPI.TOT_INS) == PAPI.PAPIBase.OK
-        LowLevel.add_event(eventset, PAPI.TOT_INS)
+        @test LowLevel.query_event(Int32(PAPI.TOT_INS)) == PAPI.PAPIBase.OK
+        LowLevel.add_event(eventset, Int32(PAPI.TOT_INS))
 
         # Precompile the "sum" function
         arr = rand(Float64, nfloats)

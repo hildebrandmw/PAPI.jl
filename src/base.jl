@@ -8,7 +8,16 @@ export PAPIError, InitCode, RetCode, libpapi, PAPI_NULL, isbitset
 
 # a nonexistent hardware event used as a placeholder
 const PAPI_NULL = Int32(-1)
-const libpapi = joinpath(@__DIR__, "..", "deps", "libpapi.so.5.6.0.0")
+const depsjl_path = joinpath(@__DIR__, "..", "deps", "deps.jl")
+if !isfile(depsjl_path)
+    error("LibFoo not installed properly, run Pkg.build(\"LibFoo\"), restart Julia and try again")
+end
+include(depsjl_path)
+
+function __init__()
+    # Check dependencies
+    check_deps() 
+end
 
 #####
 ##### Error Handling

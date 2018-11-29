@@ -2,4 +2,5 @@
 *.jl.mem
 *.swp
 docs/build
+deps/*
 

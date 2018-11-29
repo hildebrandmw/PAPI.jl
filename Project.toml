@@ -1,0 +1,12 @@
+name = "PAPI"
+uuid = "25707955-362c-5858-b477-b2b4559b2019"
+authors = ["Mark Hildebrand <mhildebrand@ucdavis.edu>"]
+version = "0.1.0"
+
+[deps]
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

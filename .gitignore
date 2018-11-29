@@ -1,2 +1,5 @@
 *.jl.cov
 *.jl.mem
+*.swp
+docs/build
+

@@ -103,7 +103,7 @@ end
 """
     query_event(code::Int32) -> RetCode
 """
-query_event(code) = @lowlevel(:PAPI_query_event, (Cint,), code)
+query_event(code) = RetCode(ccall((:PAPI_query_event, libpapi), Cint, (Cint,), code))
 
 """
     read(eventset::Int32, values::Vector{Int64}) -> RetCode
@@ -126,6 +126,31 @@ shutdown() = ccall((:PAPI_shutdown, libpapi), Nothing, ())
     start(eventset)
 """
 start(eventset::Int32) = @lowlevel(:PAPI_start, (Cint,), eventset)
+
+struct EventState
+    state::Int32
+end
+
+"""
+    state(eventset) -> Int32
+"""
+function state(eventset::Int32)
+    status = Ref{Int32}(zero(Int32))
+    @lowlevel(:PAPI_state, (Cint, Ref{Cint}), eventset, status)
+
+    return EventState(status[])
+end
+
+# Queries for event state
+stopped(x::EventState) = isbitset(x.state, 0)
+running(x::EventState) = isbitset(x.state, 1)
+paused(x::EventState) = isbitset(x.state, 2)
+not_init(x::EventState) = isbitset(x.state, 3)
+overflowing(x::EventState) = isbitset(x.state, 4)
+profiling(x::EventState) = isbitset(x.state, 5)
+multiplexing(x::EventState) = isbitset(x.state, 6)
+attached(x::EventState) = isbitset(x.state, 7)
+cpu_attached(x::EventState) = isbitset(x.state, 8)
 
 """
     stop(eventset::Int32, values::Vector{Int64}) -> RetCode

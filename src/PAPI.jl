@@ -6,9 +6,9 @@ module PAPI
 
 include("base.jl")
 include("lowlevel.jl")
+include("highlevel.jl")
 
-using .PAPIBase
-using .LowLevel
+using .PAPIBase, .LowLevel, .HighLevel
 
 include("events.jl")
 
@@ -35,6 +35,20 @@ function __init__()
         EVENTSET_COUNT[] -= 1
         if EVENTSET_COUNT[] == 0
             LowLevel.shutdown()
+        end
+    end
+end
+
+#####
+##### Fun Stuff
+#####
+
+function getevents()
+    println("Listing available events...")
+    for event in instances(PAPI.Event) 
+        code = LowLevel.query_event(event)
+        if code == PAPIBase.OK
+            println(event)
         end
     end
 end
@@ -85,17 +99,23 @@ function cleanup!(E::EventSet)
     empty!(E.values)
 end
 
-
-# WARNING: Don't call this function directly. BAD things happen :D
 function _destroy!(E::EventSet)
     # Check if this event is already destroyed. If so, do nothing
     E.destroyed && return nothing 
 
+    # Make sure the event is stopped
+    eventstate = LowLevel.state(E.handle)
+    if !LowLevel.stopped(eventstate)
+        stop(E)
+    end
+
+    # This is mostly to ensure that the top level EventSet type is emptied since it's been
+    # destroyed
     cleanup!(E)
     LowLevel.destroy_eventset(E.handle)
-    EVENTSET_COUNT[] -= 1
 
-    # Check if we're the last thing around, turn off the lights
+    # The last item to get finalized shuts down the PAPI library
+    EVENTSET_COUNT[] -= 1
     if EVENTSET_COUNT[] == 0
         LowLevel.shutdown()
     end
@@ -103,23 +123,5 @@ function _destroy!(E::EventSet)
     return nothing
 end
 
-#####
-##### Random functions I don't quite know what to do with yet.
-#####
-
-"""
-    PAPI.num_counters()
-    
-Get the number of hardware counters available on the system. 
-"""
-num_counters() = Int(ccall((:PAPI_num_counters, libpapi), Cint, ()))
-
-"""
-    PAPI.num_components()
-
-Get the number of components available on the system
-""" 
-num_components() = Int(ccall((:PAPI_num_components, libpapi), Cint, ()))
-
-
 end # module
+

@@ -1,27 +1,28 @@
 using PAPI
+using Test
 
-const JULIAEXE = joinpath(JULIA_HOME, Base.julia_exename())
+#####
+##### Functions
+#####
 
-facts("PAPI library") do
-    context("initialized") do
-        @fact PAPI.is_initialized() => true
-    end
+# Launch a command and return the PID for the launched process.
+# NOTE: once julia 1.1 comes out - can directly get the PID of a launched process
+function launch(command::String)
+    pidlauncher = joinpath(@__DIR__, "deps", "pidlauncher.sh")
+    # Resolve the path to the test. 
+    pipe = Pipe()
+    setup = pipeline(`$pidlauncher $command`; stdout = pipe)
+    process = run(setup; wait = false)
+
+    # Parse the first thing returned and let this process do its thing with reckless abandon
+    pid = parse(Int, readline(pipe)) 
+    return pid, process, pipe
 end
 
-facts("PAPI counters") do
-    @fact PAPI.num_counters() > 0 => true
-end
+#####
+##### Test Suites
+#####
 
-facts("PAPI components") do
-    @fact PAPI.num_components() > 0 => true
-end
+include("lowlevel.jl")
+include("highlevel.jl")
 
-facts("PAPI examples") do
-    exampledir = joinpath(dirname(@__FILE__), "../examples")
-    for ex in readdir(exampledir)
-        testfile = joinpath(exampledir, ex)
-        @fact success(`$JULIAEXE $testfile`) => true
-    end
-end
-
-println("This file is $(@__FILE__)")

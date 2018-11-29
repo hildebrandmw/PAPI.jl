@@ -2,6 +2,12 @@ using PAPI
 using Test
 
 #####
+##### Show the available counters
+#####
+
+PAPI.getevents()
+
+#####
 ##### Functions
 #####
 

@@ -27,7 +27,7 @@
 
     let
         # Parameters
-        nevents = 2
+        nevents = 1
         nfloats = 1000000
 
         # Create an eventset
@@ -41,9 +41,7 @@
 
         # Make the the "TOT_INS" instruction exists and add it to the eventset
         @test LowLevel.query_event(PAPI.TOT_INS) == PAPI.PAPIBase.OK
-        @test LowLevel.query_event(PAPI.L1_DCA) == PAPI.PAPIBase.OK
         LowLevel.add_event(eventset, PAPI.TOT_INS)
-        LowLevel.add_event(eventset, PAPI.L1_DCA)
 
         # Precompile the "sum" function
         arr = rand(Float64, nfloats)

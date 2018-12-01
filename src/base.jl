@@ -24,10 +24,10 @@ end
 #####
 
 include("retcodes.jl")
-struct PAPIError{R} <: Exception
+struct PAPIError <: Exception
     msg::String
 end
-PAPIError(R::RetCode) = PAPIError{R}(errmsg(R))
+PAPIError(R::RetCode) = PAPIError(errmsg(R))
 
 #####
 ##### Auxiliary Functions

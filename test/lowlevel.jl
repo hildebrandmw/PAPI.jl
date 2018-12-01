@@ -86,17 +86,18 @@
 
     let
         # Test parameters
-        sleeptime = 5 # seconds
+        sleeptime = 1 # seconds
+        iterations = 5
         nevents = 1
 
         # Create a new eventset
         eventset = LowLevel.create_eventset()
 
         # Attach the eventset to the CPU
-        LowLevel.assign_eventset_component(eventset)
+        LowLevel.assign_eventset_component(eventset, Int32(0))
 
         # Launch an external process
-        pid, process, _ = launch("sleep $sleeptime")
+        pid, process, _ = launch("sleep $(iterations * sleeptime)")
         LowLevel.attach(eventset, pid)
         LowLevel.add_event(eventset, PAPI.TOT_INS)
         LowLevel.start(eventset)
@@ -105,13 +106,19 @@
         state = LowLevel.state(eventset)
         @test LowLevel.running(state) == true
         @test LowLevel.attached(state) == true
-        sleep(sleeptime)
 
         values = zeros(Int64, nevents)
+        for i in 1:iterations
+            sleep(sleeptime)
+
+            LowLevel.read(eventset, values)
+            LowLevel.reset(eventset)
+            # Number of instruction executed should be pretty small
+            @show values
+            @test first(values) < 10000 
+        end
+
         LowLevel.stop(eventset, values)
-        # Number of instruction executed should be pretty small
-        @show values
-        @test first(values) < 10000 
 
         LowLevel.cleanup_eventset(eventset)
         LowLevel.destroy_eventset(eventset)

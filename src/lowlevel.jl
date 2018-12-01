@@ -34,9 +34,9 @@ function add_event(eventset::Int32, eventcode)
 end
 
 """
-    assign_eventset_component(eventset, [cidx]) -> RetCode
+    assign_eventset_component(eventset, cidx) -> RetCode
 """
-function assign_eventset_component(eventset::Int32, cidx = Int32(0))
+function assign_eventset_component(eventset::Int32, cidx::Int32)
     # Default component index to 0, which should be the CPU
     @lowlevel(:PAPI_assign_eventset_component, (Cint, Cint), eventset, cidx)
 end
@@ -44,7 +44,7 @@ end
 """
     attach(eventset, pid) -> RetCode
 """
-attach(eventset::Int32, pid) = @lowlevel(:PAPI_attach, (Cint, Culong), eventset, pid)
+attach(eventset::Int32, pid::Union{Int64, UInt64}) = @lowlevel(:PAPI_attach, (Cint, Culong), eventset, pid)
 
 """
     cleanup_eventset(eventset) -> RetCode
@@ -106,7 +106,7 @@ end
 query_event(code) = RetCode(ccall((:PAPI_query_event, libpapi), Cint, (Cint,), code))
 
 """
-    read(eventset::Int32, values::Vector{Int64}) -> RetCode
+    readcounters(eventset::Int32, values::Vector{Int64}) -> RetCode
 """
 function read(eventset::Int32, values::Vector{Int64})
     @lowlevel(:PAPI_read, (Cint, Ref{Clonglong}), eventset, values)

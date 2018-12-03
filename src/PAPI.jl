@@ -78,7 +78,7 @@ mutable struct EventSet
     end
 end
 
-Base.values(E::EventSet) = E.values
+Base.values(E::EventSet) = copy(E.values)
 
 function addevent!(E::EventSet, event)
     LowLevel.add_event(E.handle, event)

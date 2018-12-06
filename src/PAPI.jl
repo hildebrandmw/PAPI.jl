@@ -20,7 +20,7 @@ include("events.jl")
 
 # Taken from papi.h - lines 220
 papi_version(maj,min,rev,inc) = UInt32(0xffff0000 & ((maj << 24) | (min << 16) | (rev << 8) | inc))
-const PAPI_VER_CURRENT = papi_version(5,6,0,0)
+const PAPI_VER_CURRENT = papi_version(5,5,1,0)
 
 # Keep track of how many EventSets have been instantiated.
 const EVENTSET_COUNT = Ref(zero(UInt))

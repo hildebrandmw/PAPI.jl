@@ -55,6 +55,18 @@ function getevents()
     end
 end
 
+showevents(io::IO = stdout) = (run(pipeline(`$(PAPIBase.showevtinfo)`, stdout=io)); nothing)
+
+function checkevent(name::String, modifiers...) 
+    # Build the query string
+    query = join((name, modifiers...), ":")
+    @show query
+    run(pipeline(`$(PAPIBase.check_events) $query`, stdout = stdout))
+    return nothing
+end
+
+
+
 #####
 ##### EventSet
 #####

@@ -55,8 +55,19 @@ function getevents()
     end
 end
 
+"""
+    showevents([io::IO])
+
+Print the performance events to `io`.
+"""
 showevents(io::IO = stdout) = (run(pipeline(`$(PAPIBase.showevtinfo)`, stdout=io)); nothing)
 
+"""
+    checkevent(name, [umask], [modifiers...])
+
+Check for event by name. Name, umask, and modifiers can be found by searching the output
+of [`showevents`](@ref).
+"""
 function checkevent(name::String, modifiers...) 
     # Build the query string
     query = join((name, modifiers...), ":")
@@ -64,8 +75,6 @@ function checkevent(name::String, modifiers...)
     run(pipeline(`$(PAPIBase.check_events) $query`, stdout = stdout))
     return nothing
 end
-
-
 
 #####
 ##### EventSet

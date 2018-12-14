@@ -39,9 +39,9 @@
         @test LowLevel.cpu_attached(state) == false
         @test LowLevel.running(state) == false
 
-        # Make the the "TOT_INS" instruction exists and add it to the eventset
-        @test LowLevel.query_event(Int32(PAPI.TOT_INS)) == PAPI.PAPIBase.OK
-        LowLevel.add_event(eventset, Int32(PAPI.TOT_INS))
+        # Make the the "TOT_CYC" instruction exists and add it to the eventset
+        @test LowLevel.query_event(Int32(PAPI.TOT_CYC)) == PAPI.PAPIBase.OK
+        LowLevel.add_event(eventset, Int32(PAPI.TOT_CYC))
 
         # Precompile the "sum" function
         arr = rand(Float64, nfloats)
@@ -99,7 +99,7 @@
         # Launch an external process
         pid, process, _ = launch("sleep $(iterations * sleeptime)")
         LowLevel.attach(eventset, pid)
-        LowLevel.add_event(eventset, PAPI.TOT_INS)
+        LowLevel.add_event(eventset, PAPI.TOT_CYC)
         LowLevel.start(eventset)
 
         # Run some queries
@@ -115,7 +115,7 @@
             LowLevel.reset(eventset)
             # Number of instruction executed should be pretty small
             @show values
-            @test first(values) < 10000 
+            @test first(values) < 100000 
         end
 
         LowLevel.stop(eventset, values)

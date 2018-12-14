@@ -6,6 +6,11 @@ using Test
 #####
 
 PAPI.getevents()
+papi_avail = joinpath(@__DIR__, "..", "deps", "usr", "bin", "papi_avail")
+papi_native_avail = joinpath(@__DIR__, "..", "deps", "usr", "bin", "papi_native_avail")
+
+run(`$papi_avail`)
+run(`$papi_native_avail`)
 
 #####
 ##### Functions
@@ -24,6 +29,7 @@ function launch(command::String)
     pid = parse(Int, readline(pipe)) 
     return pid, process, pipe
 end
+
 
 #####
 ##### Test Suites

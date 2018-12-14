@@ -6,11 +6,11 @@ using Test
 #####
 
 PAPI.getevents()
-papi_avail = joinpath(@__DIR__, "..", "deps", "usr", "bin", "papi_avail")
-papi_native_avail = joinpath(@__DIR__, "..", "deps", "usr", "bin", "papi_native_avail")
-
-run(`$papi_avail`)
-run(`$papi_native_avail`)
+# papi_avail = joinpath(@__DIR__, "..", "deps", "usr", "bin", "papi_avail")
+# papi_native_avail = joinpath(@__DIR__, "..", "deps", "usr", "bin", "papi_native_avail")
+# 
+# run(`$papi_avail`)
+# run(`$papi_native_avail`)
 
 #####
 ##### Functions

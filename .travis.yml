@@ -11,6 +11,7 @@ git:
   depth: 99999999
 
 # Require sudo for performance counter access
+dist: precise
 sudo: required
 
 before_install:

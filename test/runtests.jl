@@ -12,6 +12,9 @@ PAPI.getevents()
 # run(`$papi_avail`)
 # run(`$papi_native_avail`)
 
+run(`perf stat`)
+run(`perf list`)
+
 #####
 ##### Functions
 #####

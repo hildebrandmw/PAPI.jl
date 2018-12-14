@@ -29,7 +29,11 @@ sudo: required
 #         - julia --project=docs -e 'using Pkg; Pkg.instantiate(); Pkg.develop(PackageSpec(path=pwd()))'
 #         - julia --project=docs --color=yes docs/make.jl
 #       after_success: skip
+script:
+    - julia --color=yes -e "using Pkg; Pkg.build()"
+    - sudo ~/julia/bin/julia --check-bounds=yes --color=yes -e "using Pkg; Pkg.test(coverage=true);"
+
 
 after_success:
-  - julia --project=test/coverage -e 'using Pkg; Pkg.instantiate()'
-  - julia --project=test/coverage test/coverage/coverage.jl
+  - sudo ~/julia/bin/julia --project=test/coverage -e 'using Pkg; Pkg.instantiate()'
+  - sudo ~/julia/bin/julia --project=test/coverage test/coverage/coverage.jl

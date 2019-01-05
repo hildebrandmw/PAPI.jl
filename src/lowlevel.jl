@@ -21,6 +21,8 @@ macro lowlevel(fn, argtypes, args...)
     end
 end
 
+inherit(eventset::Int32) = @lowlevel(:PAPI_inherit, (Cint,), eventset)
+
 """
     add_event(eventset, eventcode) -> RetCode
 """

@@ -117,7 +117,10 @@ read(E::EventSet) = LowLevel.read(E.handle, E.values)
 stop(E::EventSet) = LowLevel.stop(E.handle, E.values)
 reset(E::EventSet) = LowLevel.reset(E.handle)
 
-attach(E::EventSet, pid) = LowLevel.attach(E.handle, pid)
+function attach(E::EventSet, pid) 
+    LowLevel.inherit(E.handle)
+    LowLevel.attach(E.handle, pid)
+end
 detach(E::EventSet, pid) = LowLevel.detach(E.handle, pid)
 
 

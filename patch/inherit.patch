@@ -1,0 +1,40 @@
+commit 5816d82c2b41010e6648b83080820730a0a88618
+Author: Mark Hildebrand <mhildebrand@ucdavis.edu>
+Date:   Sat Jan 5 14:29:23 2019 -0800
+
+    Export thread inheritence
+
+diff --git a/src/papi.c b/src/papi.c
+index 065c337e..603e3bea 100644
+--- a/src/papi.c
++++ b/src/papi.c
+@@ -3134,6 +3134,17 @@ PAPI_set_debug( int level )
+ 	return ( PAPI_set_opt( PAPI_DEBUG, &option ) );
+ }
+ 
++int
++PAPI_inherit( int EventSet )
++{
++    PAPI_option_t opt;
++
++    memset( &opt, 0x0, sizeof ( opt ) );
++    opt.inherit.inherit = PAPI_INHERIT_ALL;
++    opt.inherit.eventset = EventSet;
++    return PAPI_set_opt( PAPI_INHERIT, &opt );
++}
++
+ /* Attaches to or detaches from the specified thread id */
+ inline_static int
+ _papi_set_attach( int option, int EventSet, unsigned long tid )
+diff --git a/src/papi.h b/src/papi.h
+index 8e8413bb..b27cd432 100644
+--- a/src/papi.h
++++ b/src/papi.h
+@@ -1101,6 +1101,7 @@ enum {
+    int   PAPI_disable_component(int cidx); /**< Disables a component before init */
+    int	 PAPI_disable_component_by_name(const char *name ); /**< Disable, before library init, a component by name. */
+ 
++   int   PAPI_inherit(int EventSet);
+ 
+    /** @} */
+ 
